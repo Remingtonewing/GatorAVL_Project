@@ -7,19 +7,32 @@ class TreeNode {
 public:
     struct Student {
         std::string name;
-        std::string ID;
+        int ID;
         Student(int ID, std::string name);
         Student();
-        int getId(TreeNode* root, std::string userInput);
-        TreeNode* Insert(TreeNode* root,std::string val);
-        std::string getName(std::string userInput);
+        int getId();
+        std::string getName();
     };
+    TreeNode* Insert(TreeNode* root,Student s);
     int levelCount = 0;
     Student s;
     TreeNode *left;
     TreeNode *right;
-    TreeNode(Student s) :  left(NULL), right(NULL) {}
-
-
+    TreeNode(Student s) :  left(nullptr), right(nullptr) {
+        this->s.name = s.getName();
+        this->s.ID = s.getId();
+    }
 
 };
+TreeNode::Student::Student(int ID, std::string name) {
+    this->ID = ID;
+    this->name = name;
+}
+TreeNode::Student::Student() {}
+
+int TreeNode::Student::getId() {
+    return ID;
+}
+std::string TreeNode::Student::getName() {
+    return name;
+}

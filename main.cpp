@@ -4,7 +4,7 @@
 
 
 
-int TreeNode::Student::getId(TreeNode* root, std::string userInput) {
+int getIdVal(std::string userInput) {
     int quoteCount = 0;
     while (quoteCount < 2) {
         if (userInput[0] == '"') {
@@ -17,7 +17,7 @@ int TreeNode::Student::getId(TreeNode* root, std::string userInput) {
     return stoi(userInput);
 }
 
-std::string TreeNode::Student::getName(std::string userInput) {
+std::string getNameVal(std::string userInput) {
     int iter = 0;
     int quoteCount = 0;
     while (quoteCount < 2) {
@@ -61,11 +61,14 @@ std::string findCommand(std::string input) {
     if (commandType != std::string::npos) {
         return "removeInorder";
     }
-}
+    return "unsuccessful";
+} //Needs finishing
 
 
 int main() {
     TreeNode *root = nullptr;
+    int studentID = 0;
+    std::string studentName = " ";
     int numLines;
     std::string userInput = "";
     std::cin >> numLines; //Reads how many commands the user is going to input.
@@ -73,10 +76,20 @@ int main() {
     for (int i = 0; i < numLines; i++) {
         std::getline(std::cin, userInput);
         if (findCommand(userInput) == "insert") {
-            std::cout << "insert";
+            userInput.erase(0,7);
+            //Insert userInput;
         }if (findCommand(userInput) == "remove") {
-            std::cout << "remove";
+            userInput.erase(0,6);
+            //Remove userInput
         }
+
+        studentID = getIdVal(userInput);
+        studentName = getNameVal(userInput);
+        TreeNode::Student s = {studentID,studentName};
+        root = Insert(root,s);
+        std::cout << s.getId() << std::endl;
+        std::cout << s.getName() << std::endl;
+        std::cout << root->s.getId();
 
     }
 
