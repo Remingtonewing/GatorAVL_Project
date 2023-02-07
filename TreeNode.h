@@ -5,12 +5,21 @@
 class TreeNode {
 
 public:
-    std::string getName(std::string userInput);
-    int getId(std::string userInput);
-    TreeNode* Insert(TreeNode* root,std::string val);
-    int val;
-    std::string name;
+    struct Student {
+        std::string name;
+        std::string ID;
+        Student(int ID, std::string name);
+        Student();
+        int getId(TreeNode* root, std::string userInput);
+        TreeNode* Insert(TreeNode* root,std::string val);
+        std::string getName(std::string userInput);
+    };
+    int levelCount = 0;
+    Student s;
     TreeNode *left;
     TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    TreeNode(Student s) :  left(NULL), right(NULL) {}
+
+
+
 };
