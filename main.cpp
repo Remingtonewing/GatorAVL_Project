@@ -4,8 +4,6 @@
 #include <iterator>
 #include <vector>
 
-//.compare() taken from https://www.geeksforgeeks.org/stdstringcompare-in-c/ easiest method I used to compare ID values.
-
 
 
 struct Node {
