@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include "TreeNode.h"
 #include <iterator>
 #include <vector>
 
@@ -66,10 +65,14 @@ public:
         if (!root) {
             std::cout << "unsuccessful" << std::endl;
             return root;
-        } else if (std::stoi(root->getId()) < std::stoi(ID))
+        } else if (std::stoi(root->getId()) < std::stoi(ID)) {
             root->right = Remove(root->right, ID);
-        else if (std::stoi(root->getId()) > std::stoi(ID))
+            return root;
+        }
+        else if (std::stoi(root->getId()) > std::stoi(ID)) {
             root->left = Remove(root->left, ID);
+            return root;
+        }
         else if (root->getId() == ID) {
             if (!root->left && !root->right) {
                 if (root->getId() == head->getId()) {
@@ -79,17 +82,24 @@ public:
                 std::cout << "successful" << std::endl;
                 return nullptr;
             }
-            if (root->right == nullptr && root->left != nullptr) {
-                Node *temp = root;
-                root = root->left;
-                delete temp;
+            if (root->right != nullptr && root->left == nullptr) {
+                root->name = root->right->name;
+                root->ID = root->right->ID;
+                root->left = root->right->left;
+                root->right = root->right->right;
+                delete root->right;
                 std::cout << "successful" << std::endl;
+                return root;
             }
-            if (root->left == nullptr && root->right != nullptr) {
-                Node *temp = root;
-                root = root->right;
-                delete temp;
+
+            if (root->left != nullptr && root->right == nullptr) {
+                root->ID = root->left->getId();
+                root->name = root->left->getName();
+                root->right = root->left->right;
+                root->left = root->left->left;
+                delete root->left;
                 std::cout << "successful" << std::endl;
+                return root;
             }
             if (root->right && root->left) {
                 Node *finder = root->right;
@@ -99,6 +109,7 @@ public:
                 root->ID = finder->ID;
                 root->name = finder->name;
                 root->right = Remove(root->right, finder->ID);
+                return root;
             }
         }
     }
@@ -247,7 +258,7 @@ public:
     void printVector(std::vector<std::string> printName) {
         for (int i = 0; i < printName.size(); i++) {
             if (i != printName.size() - 1)
-                std::cout << printName[i] << ",";
+                std::cout << printName[i] << ", ";
             else
                 std::cout << printName[i] << std::endl;
         }
@@ -263,6 +274,25 @@ public:
             }
         }
         return nodes;
+    }
+    void searchHelper(Node *root, std::vector<std::string>& idStore) {
+        if (root) {
+            PrintInOrder(root->left, idStore);
+            idStore.push_back(root->ID);
+            PrintInOrder(root->right, idStore);
+        } else {
+            std::cout << "";
+        }
+    }
+    bool checkTree(std::vector<std::string> vec, std::string val) {
+        for (int i = 0; i < vec.size(); i++) {
+            if (val == vec[i]) {
+                return true;
+            } else {
+                std::cout<< "";
+            }
+        }
+        return false;
     }
 };
 
@@ -419,6 +449,7 @@ public:
                     names.clear();
                 } else if (findCommand(userInput) == "search") {
                     bool isInt;
+                    std::vector<std::string> value;
                     TreeNode::Node* result;
                     userInput.erase(0, 7);
                     for (char c : userInput) {
@@ -431,16 +462,23 @@ public:
                     }
                     if (!isInt) {
                         userInput = getNameVal(userInput);
-                        result = root.nameSearch(root.Head(), userInput);
-                        if (result->name != userInput && root.height(result) == root.height(root.Head())) {
+                        root.printPost(root.Head(), value);
+                        if (!root.checkTree(value, userInput)) {
                             std::cout << "unsuccessful" << std::endl;
+                        } else {
+                            result = root.nameSearch(root.Head(), userInput);
                         }
+                        value.clear();
                     }
-                    else {
-                       result = root.IDSearch(root.Head(), userInput);
-                        if (result->ID != userInput && root.height(result) == root.height(root.Head())) {
+                    else if (isInt){
+                        root.searchHelper(root.Head(),value);
+                        if (!root.checkTree(value, userInput)) {
                             std::cout << "unsuccessful" << std::endl;
                         }
+                        else {
+                            result = root.IDSearch(root.Head(), userInput);
+                        }
+                        value.clear();
                     }
 
                 } else if (userInput.substr(0,13) == "removeInorder") {
@@ -452,7 +490,6 @@ public:
                         iter++;
                         if (i == std::stoi(userInput)) {
                             std::string tempID = nodes[i];
-                            std:: cout<< tempID;
                             root.Remove(root.Head(),tempID);
                             break;
                         }
